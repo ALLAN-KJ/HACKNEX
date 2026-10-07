@@ -34,7 +34,21 @@ async def analyze(files: List[UploadFile], question: str = Form(...)):
     scans = []
     
     for file in files:
-        df = pd.read_csv(file.file)
+        contents = await file.read()
+        import io
+        df = None
+        for enc in ['utf-8', 'utf-8-sig', 'utf-16', 'latin1']:
+            try:
+                df = pd.read_csv(io.BytesIO(contents), encoding=enc)
+                break
+            except Exception:
+                continue
+        if df is None:
+            return {
+                "confidence": "Refused",
+                "refuse_reason": f"Could not parse file '{file.filename}'. Ensure it is a valid CSV or JSON file.",
+                "caveats": []
+            }
         name = file.filename.split('.')[0]
         dfs[name] = df
         

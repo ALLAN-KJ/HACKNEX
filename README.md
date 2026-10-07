@@ -85,4 +85,5 @@ curl -s -X POST http://localhost:8000/api/analyze \
 ## Declared Resources
 - Gemini API (gemini-2.0-flash)
 - Google Fonts (Inter, JetBrains Mono)
+- Open Source Components: React, Vite, Tailwind CSS, FastAPI, uvicorn, pandas, numpy
 - No other models or external services are used.
