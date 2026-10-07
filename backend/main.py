@@ -4,7 +4,6 @@ import pandas as pd
 from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-import google.generativeai as genai
 from scanner import scan_dataframe, detect_currency_conflict
 from executor import execute_code_sandboxed
 
@@ -31,7 +30,6 @@ You must return ONLY a JSON object with this exact schema:
 
 @app.post("/api/analyze")
 async def analyze(files: List[UploadFile], question: str = Form(...)):
-    genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
     dfs = {}
     scans = []
     
@@ -52,15 +50,20 @@ async def analyze(files: List[UploadFile], question: str = Form(...)):
         "question": question
     }
     
-    question_lower = question.lower()
-    if "total revenue across all sales" in question_lower:
-        raw_text = '{"answer": "Refused due to currency conflict.", "confidence": "Refused", "refuse_reason": "Currencies are mixed (USD and EUR).", "code": "", "caveats": []}'
-    elif "appears most frequently" in question_lower:
-        raw_text = '{"answer": "Widget A appears most frequently.", "confidence": "High", "refuse_reason": null, "code": "print(inventory[\'product\'].mode()[0])", "caveats": ["Duplicate rows detected"]}'
-    elif "average price of in-stock items" in question_lower:
-        raw_text = '{"answer": "The average price is 25.0", "confidence": "High", "refuse_reason": null, "code": "print(inventory[inventory[\'in_stock\']==True][\'unit_price\'].mean())", "caveats": ["Null unit prices exist"]}'
-    else:
-        raw_text = '{"answer": "Mocked", "confidence": "Low", "refuse_reason": null, "code": "print(1)", "caveats": []}'
+    user_msg = json.dumps(summary)
+    
+    from groq import Groq
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY", "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"))
+    
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_msg}
+        ],
+        response_format={"type": "json_object"}
+    )
+    raw_text = response.choices[0].message.content
     
     
     try:
