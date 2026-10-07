@@ -1,0 +1,3 @@
+curl.exe -s -X POST http://localhost:8000/api/analyze -F "files=@sample_data/sales_usd.csv" -F "files=@sample_data/sales_eur.csv" -F "question=What is the total revenue across all sales?" | py -m json.tool > sample_outputs/refused_response.json
+curl.exe -s -X POST http://localhost:8000/api/analyze -F "files=@sample_data/inventory.csv" -F "question=Which product appears most frequently in inventory?" | py -m json.tool > sample_outputs/inventory_answer.json
+curl.exe -s -X POST http://localhost:8000/api/analyze -F "files=@sample_data/inventory.csv" -F "question=What is the average price of in-stock items?" | py -m json.tool > sample_outputs/null_caveat_answer.json

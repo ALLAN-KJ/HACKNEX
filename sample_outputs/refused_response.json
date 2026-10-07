@@ -1,0 +1,7 @@
+{
+    "answer": "Refused due to currency conflict.",
+    "confidence": "Refused",
+    "refuse_reason": "Currencies are mixed (USD and EUR).",
+    "code": "",
+    "caveats": []
+}

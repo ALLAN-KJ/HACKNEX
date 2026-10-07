@@ -1,0 +1,11 @@
+{
+    "answer": "The average price is 25.0",
+    "confidence": "Low",
+    "refuse_reason": null,
+    "code": "print(inventory[inventory['in_stock']==True]['unit_price'].mean())",
+    "caveats": [
+        "Null unit prices exist",
+        "Mismatch between model answer and executed code output."
+    ],
+    "stdout": "21.428571428571427"
+}

@@ -1,0 +1,10 @@
+{
+    "answer": "Widget A appears most frequently.",
+    "confidence": "High",
+    "refuse_reason": null,
+    "code": "print(inventory['product'].mode()[0])",
+    "caveats": [
+        "Duplicate rows detected"
+    ],
+    "stdout": "Widget A"
+}

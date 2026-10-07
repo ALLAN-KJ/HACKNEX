@@ -1,0 +1,13 @@
+product,stock,unit_price,in_stock
+Widget A,150,10.00,true
+Widget B,80,30.00,true
+Widget C,200,20.00,true
+Widget D,40,40.00,true
+Widget E,500,10.00,true
+Widget F,0,15.00,false
+Widget G,10,,true
+Widget H,20,,true
+Widget I,30,,true
+Widget J,0,25.00,false
+Widget A,150,10.00,true
+Widget B,80,30.00,true

@@ -1,0 +1,11 @@
+transaction_id,product,quantity,revenue,currency,date
+1,Widget A,10,100,USD,01/15/2026
+2,Widget B,5,150,USD,02/20/2026
+3,Widget C,20,400,USD,03/05/2026
+4,Widget A,15,150,USD,04/10/2026
+5,Widget D,8,320,USD,05/12/2026
+6,Widget B,10,300,USD,06/25/2026
+7,Widget E,5,50,USD,07/30/2026
+8,Widget A,20,200,USD,08/15/2026
+9,Widget C,10,200,USD,09/10/2026
+1,Widget A,10,100,USD,01/15/2026
