@@ -56,7 +56,7 @@ async def analyze(files: List[UploadFile], question: str = Form(...)):
     client = Groq(api_key=os.environ.get("GROQ_API_KEY", "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"))
     
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_msg}
@@ -85,6 +85,12 @@ async def analyze(files: List[UploadFile], question: str = Form(...)):
         result["caveats"].append(f"Execution error: {exec_result['error']}")
         result["confidence"] = "Low"
     elif stdout:
+        lower_ans = result.get("answer", "").lower()
+        if any(phrase in lower_ans for phrase in ["unable to determine", "summary alone", "cannot determine", "don't have", "do not have"]):
+            result["answer"] = stdout
+            if result.get("confidence") == "Low" and not exec_result.get("error"):
+                result["confidence"] = "High" if not result.get("caveats") else "Medium"
+        
         import re
         ans_nums = re.findall(r"[-+]?\d*\.\d+|\d+", result["answer"].replace(",", ""))
         out_nums = re.findall(r"[-+]?\d*\.\d+|\d+", stdout.replace(",", ""))

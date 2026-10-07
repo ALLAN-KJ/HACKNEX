@@ -93,17 +93,18 @@ function App() {
     });
 
     try {
-      const response = await fetch("http://localhost:8000/api/analyze", {
+      const response = await fetch("/api/analyze", {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
-      setResult(data);
+      setResult({ ...data, submittedQuestion: question });
     } catch (e) {
       setResult({
         confidence: "Refused",
         refuse_reason: "Network error: " + e.message,
-        caveats: []
+        caveats: [],
+        submittedQuestion: question
       });
     } finally {
       setLoading(false);
@@ -287,13 +288,41 @@ function App() {
                     )}
                   </div>
 
+                  {/* Section 1.5: Submitted Question */}
+                  {result.submittedQuestion && (
+                    <div className="px-6 py-4 border-b border-[#1e1e1e] bg-[#0a0a0a]">
+                      <p className="text-sm text-[#ededed]">
+                        <span className="text-[#666666] font-medium mr-2">Q:</span>
+                        {result.submittedQuestion}
+                      </p>
+                    </div>
+                  )}
+
                   {/* Section 2: Answer Value */}
                   <div className="px-6 py-6 border-b border-[#1e1e1e]">
-                    <p className={`text-2xl font-medium text-white ${
-                      /^[-+]?\d*\.?\d+$/.test(result.answer.trim().replace(/,/g, '')) ? 'font-mono tracking-tight' : 'font-sans'
-                    }`} style={/^[-+]?\d*\.?\d+$/.test(result.answer.trim().replace(/,/g, '')) ? { fontFamily: 'JetBrains Mono, monospace' } : {}}>
-                      {result.answer}
-                    </p>
+                    {result.stdout ? (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#4ade80] bg-[#0d2b1d] border border-[#166534] px-2 py-0.5 rounded-full inline-block mb-2">
+                            Verified Sandbox Output
+                          </span>
+                          <p className="text-3xl font-semibold text-white tracking-tight" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                            {result.stdout}
+                          </p>
+                        </div>
+                        {result.answer && (
+                          <p className="text-sm text-[#888888] leading-relaxed pt-2 border-t border-[#1a1a1a]">
+                            {result.answer}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className={`text-2xl font-medium text-white ${
+                        /^[-+]?\d*\.?\d+$/.test((result.answer || '').trim().replace(/,/g, '')) ? 'font-mono tracking-tight' : 'font-sans'
+                      }`} style={/^[-+]?\d*\.?\d+$/.test((result.answer || '').trim().replace(/,/g, '')) ? { fontFamily: 'JetBrains Mono, monospace' } : {}}>
+                        {result.answer}
+                      </p>
+                    )}
                   </div>
 
                   {/* Section 3: Verification Code */}

@@ -10,6 +10,9 @@ def execute_code_sandboxed(code: str, dfs: dict) -> dict:
         with open(data_path, 'wb') as f:
             pickle.dump(dfs, f)
             
+        for name, df in dfs.items():
+            df.to_csv(os.path.join(tmpdir, f"{name}.csv"), index=False)
+            
         runner_code = f"""import pickle
 import pandas as pd
 import sys
@@ -22,6 +25,7 @@ try:
 {chr(10).join('    ' + line for line in code.split(chr(10)))}
 except Exception as e:
     print(f"ERROR: {{e}}", file=sys.stderr)
+    sys.exit(1)
 """
         runner_path = os.path.join(tmpdir, 'runner.py')
         with open(runner_path, 'w', encoding='utf-8') as f:

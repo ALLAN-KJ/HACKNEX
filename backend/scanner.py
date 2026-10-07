@@ -8,6 +8,7 @@ def scan_dataframe(df: pd.DataFrame, filename: str) -> dict:
         "columns": list(df.columns),
         "null_counts": df.isnull().sum().to_dict(),
         "duplicates": int(df.duplicated().sum()),
+        "sample_rows": df.head(5).to_dict(orient="records"),
         "currency_symbols": {},
         "ambiguous_dates": {},
         "mixed_types": {}
